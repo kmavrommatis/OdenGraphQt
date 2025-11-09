@@ -430,8 +430,6 @@ class NodeViewer(QtWidgets.QGraphicsView):
         super(NodeViewer, self).resizeEvent(event)
 
     def contextMenuEvent(self, event):
-        self.RMB_state = False
-
         ctx_menu = None
         ctx_menus = self.context_menus()
 
@@ -590,6 +588,7 @@ class NodeViewer(QtWidgets.QGraphicsView):
             super(NodeViewer, self).mousePressEvent(event)
 
     def mouseReleaseEvent(self, event):
+
         if event.button() == QtCore.Qt.MouseButton.LeftButton:
             self.LMB_state = False
         elif event.button() == QtCore.Qt.MouseButton.RightButton:
@@ -753,7 +752,7 @@ class NodeViewer(QtWidgets.QGraphicsView):
         pos = self.mapToScene(event.pos())
         event.setDropAction(QtCore.Qt.DropAction.CopyAction)
         self.data_dropped.emit(
-            event.mimeData(), QtCore.QPoint(pos.x(), pos.y())
+            event.mimeData(), QtCore.QPoint(int(pos.x()), int(pos.y()))
         )
 
     def dragEnterEvent(self, event):

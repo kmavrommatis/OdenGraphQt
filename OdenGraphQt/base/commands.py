@@ -195,7 +195,7 @@ class NodeAddedCmd(QtWidgets.QUndoCommand):
         self.node.model.height = self.node.view.height
 
         if self.emit_signal:
-            self.graph.nodes_deleted.emit(self.node)
+            self.graph.nodes_deleted.emit([self.node])
 
 
 class NodesRemovedCmd(QtWidgets.QUndoCommand):

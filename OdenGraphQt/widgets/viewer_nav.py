@@ -149,6 +149,7 @@ class NodeNavigationWidget(QtWidgets.QListView):
         else:
             width = metrics.width(item.text())
         width *= 1.5
+        width=int(width)
         item.setSizeHint(QtCore.QSize(width, 20))
         self.model().appendRow(item)
         self.selectionModel().setCurrentIndex(
