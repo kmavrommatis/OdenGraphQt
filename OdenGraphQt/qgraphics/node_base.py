@@ -290,6 +290,16 @@ class NodeItem(AbstractNodeItem):
             add_h (float): add additional height.
         """
         self._width, self._height = self.calc_size(add_w, add_h)
+        
+        # Use fixed width/height if set in properties
+        fixed_w = self._properties.get('width')
+        if fixed_w:
+             self._width = max(self._width, fixed_w)
+             
+        fixed_h = self._properties.get('height')
+        if fixed_h:
+             self._height = max(self._height, fixed_h)
+
         if self._width < NodeEnum.WIDTH.value:
             self._width = NodeEnum.WIDTH.value
         if self._height < NodeEnum.HEIGHT.value:
@@ -483,7 +493,16 @@ class NodeItem(AbstractNodeItem):
     def _align_label_horizontal(self, h_offset, v_offset):
         rect = self.boundingRect()
         text_rect = self._text_item.boundingRect()
-        x = rect.center().x() - (text_rect.width() / 2)
+        
+        if self.text_alignment == 'left':
+            x = rect.left() + 10.0
+            if self._icon_item.isVisible():
+                x += self._icon_item.boundingRect().width()
+        elif self.text_alignment == 'right':
+            x = rect.right() - text_rect.width() - 10.0
+        else:
+            x = rect.center().x() - (text_rect.width() / 2)
+            
         self._text_item.setPos(x + h_offset, rect.y() + v_offset)
 
     def _align_label_vertical(self, h_offset, v_offset):

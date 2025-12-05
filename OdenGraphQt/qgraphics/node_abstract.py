@@ -30,6 +30,7 @@ class AbstractNodeItem(QtWidgets.QGraphicsItem):
             'disabled': False,
             'visible': False,
             'layout_direction': LayoutDirectionEnum.HORIZONTAL.value,
+            'text_alignment': 'center',
         }
         self._width = NodeEnum.WIDTH.value
         self._height = NodeEnum.HEIGHT.value
@@ -118,6 +119,7 @@ class AbstractNodeItem(QtWidgets.QGraphicsItem):
 
     @width.setter
     def width(self, width=0.0):
+        self._properties['width'] = width
         self._width = width
 
     @property
@@ -126,6 +128,7 @@ class AbstractNodeItem(QtWidgets.QGraphicsItem):
 
     @height.setter
     def height(self, height=0.0):
+        self._properties['height'] = height
         self._height = height
 
     @property
@@ -267,3 +270,12 @@ class AbstractNodeItem(QtWidgets.QGraphicsItem):
                 if name == 'pos':
                     name = 'xy_pos'
                 setattr(self, name, value)
+
+    @property
+    def text_alignment(self):
+        return self._properties['text_alignment']
+
+    @text_alignment.setter
+    def text_alignment(self, alignment='center'):
+        self._properties['text_alignment'] = alignment.lower()
+        self.draw_node()

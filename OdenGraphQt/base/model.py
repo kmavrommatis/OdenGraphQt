@@ -72,6 +72,7 @@ class NodeModel(object):
         self.height = 80.0
         self.pos = [0.0, 0.0]
         self.layout_direction = LayoutDirectionEnum.HORIZONTAL.value
+        self.text_alignment = 'center'
 
         # BaseNode attrs.
         self.inputs = {}

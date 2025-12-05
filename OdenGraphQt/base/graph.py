@@ -1198,7 +1198,7 @@ class NodeGraph(QtCore.QObject):
         self.nodes_registered.emit(nodes)
 
     def create_node(self, node_type, name=None, selected=True, color=None,
-                    text_color=None, pos=None, push_undo=True):
+                    text_color=None, pos=None, push_undo=True, width=None, height=None, text_alignment=None):
         """
         Create a new node in the node graph.
 
@@ -1213,6 +1213,9 @@ class NodeGraph(QtCore.QObject):
             text_color (tuple or str): text color ``(255, 255, 255)`` or ``"#FFFFFF"``.
             pos (list[int, int]): initial x, y position for the node (default: ``(0, 0)``).
             push_undo (bool): register the command to the undo stack. (default: True)
+            width (int): set the initial width of the node in characters. (optional)
+            height (int): set the initial height of the node in characters. (optional)
+            text_alignment (str): set the text alignment of the node. (optional)
 
         Returns:
             BaseNode: the created instance of the node.
@@ -1282,6 +1285,8 @@ class NodeGraph(QtCore.QObject):
                 node.model.text_color = format_color(text_color)
             if pos:
                 node.model.pos = [float(pos[0]), float(pos[1])]
+            if text_alignment:
+                node.set_text_alignment(text_alignment)
 
             # initial node direction layout.
             node.model.layout_direction = self.layout_direction()
@@ -1302,6 +1307,35 @@ class NodeGraph(QtCore.QObject):
                 for n in self.selected_nodes():
                     n.set_property('selected', False, push_undo=False)
                 undo_cmd.redo()
+
+            if width or height:
+                font = node.view._text_item.font()
+                fm = QtGui.QFontMetrics(font)
+
+                if width:
+                    char_w = fm.horizontalAdvance('x') if hasattr(fm, 'horizontalAdvance') else fm.width('x')
+                    pixel_width = (width * char_w) + 30.0
+                    node.view.width = pixel_width
+                    node.model.width = node.view.width
+                if height:
+                    char_h = fm.height()
+                    pixel_height = (height * char_h) + 10.0
+                    node.view.height = pixel_height
+                    node.model.height = node.view.height
+
+                if node.view.layout_direction == LayoutDirectionEnum.HORIZONTAL.value:
+                    text_h = node.view._text_item.boundingRect().height() + 4.0
+                    node.view.align_label()
+                    node.view.align_icon(h_offset=2.0, v_offset=1.0)
+                    node.view.align_ports(v_offset=text_h)
+                    node.view.align_widgets(v_offset=text_h)
+                elif node.view.layout_direction == LayoutDirectionEnum.VERTICAL.value:
+                    node.view.align_label(h_offset=6)
+                    node.view.align_icon(h_offset=6, v_offset=4)
+                    node.view.align_ports()
+                    node.view.align_widgets()
+
+                node.view.update()
 
             return node
 

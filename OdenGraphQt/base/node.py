@@ -544,3 +544,23 @@ class NodeObject(object):
         """
         self.model.layout_direction = value
         self.view.layout_direction = value
+
+    def set_text_alignment(self, alignment):
+        """
+        Set the text alignment of the node label.
+        
+        Args:
+            alignment (str): 'left', 'center', or 'right'.
+        """
+        self.model.text_alignment = alignment.lower()
+        self.view.text_alignment = alignment.lower()
+        self.view.update()
+
+    def text_alignment(self):
+        """
+        Returns the text alignment of the node label.
+        
+        Returns:
+            str: 'left', 'center', or 'right'.
+        """
+        return self.model.text_alignment
