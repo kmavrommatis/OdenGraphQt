@@ -32,6 +32,13 @@ dynamic = [
     "dependencies",
 ]
 
+[project.optional-dependencies]
+# Every module imports Qt through qtpy, so the binding is the application's
+# choice rather than ours. Install one of these extras (or provide a binding
+# yourself) alongside the package.
+pyside6 = ["PySide6>=6.5.0"]
+pyqt6 = ["PyQt6>=6.5.0"]
+
 [project.urls]
 "Homepage" = "https://github.com/hueyyeng/OdenGraphQt"
 "Bug Reports" = "https://github.com/hueyyeng/OdenGraphQt/issues"
